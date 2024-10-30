@@ -21,6 +21,8 @@
         t[wacke.tex] = wacke;
         t[siltstn.tex] = siltstn;
         t[shale.tex] = shale;
+        t[gypsum.tex] = gypsum;
+        t[rocksalt.tex] = rocksalt;
     }
 
     //tiles
@@ -103,5 +105,15 @@
     public static tile shale = new() {
         tex = 0x72,
         name = "shale"
+    };
+
+    public static tile gypsum = new() { 
+        tex = 0xA0,
+        name = "gypsum"
+    };
+
+    public static tile rocksalt = new() {
+        tex = 0xA1,
+        name = "rock salt"
     };
 }

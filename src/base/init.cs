@@ -15,8 +15,9 @@ partial class lodus {
         Console.WriteLine("generating chunks");
 
         map.dat = new chunk[256,256,256];
+        map.genning = new bool[256,256,256];
 
-        int i = 0;
+        /*int i = 0;
 
         int total = 128 * 64;
 
@@ -27,7 +28,7 @@ partial class lodus {
 
                 if(i%64==0)
                     Console.WriteLine($"generated chunk {i} / {total}");
-            }
+            }*/
 
         Simulation.SetFixedResolution(640,360,Color.Black);
     }

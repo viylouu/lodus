@@ -8,8 +8,10 @@ public class worldgen {
 
     static int seed = 0;
 
-    static byte maxasync = 96;
+    static byte maxasync = 8;
     static byte async = 0;
+
+    static Random r = new();
 
     public static void initnoise(int _seed) {
         seed = _seed;
@@ -29,6 +31,7 @@ public class worldgen {
     }
 
     public static async void gen(int u, int v, int w) {
+        map.genning[u,v,w] = true;
         ushort[,,] dat = new ushort[g.chksize,g.chksize,g.chksize];
         ITexture topview = Graphics.CreateTexture(g.chksize,g.chksize);
 
@@ -41,7 +44,7 @@ public class worldgen {
         float wx, wy, wz;
 
         bool empty = true;
-
+        
         for(int x = 0; x < g.chksize; x++) {
             for(int y = 0; y < 1; y++) {
                 for(int z = 0; z < g.chksize; z++) {
@@ -49,7 +52,7 @@ public class worldgen {
 
                     if(async >= maxasync) {
                         async = 0;
-                        await Task.Delay(0);
+                        await Task.Delay(16);
                     }
 
                     wx = u*g.chksize+x;
@@ -64,16 +67,19 @@ public class worldgen {
 
                     if(contxyz*bxyz >= 0.25f) {
                         dat[x,y,z] = tiles.grass.tex;
-                        topview.SetPixel(x,z,Color.Lerp(Color.Black,Color.White, contxyzm));
+                        lock(topview)
+                            topview.SetPixel(x,z,Color.Lerp(Color.Black,Color.White, contxyzm));
                         empty = false;
                         continue;
                     }
 
-                    topview.SetPixel(x,z,Color.Lerp(Color.Black,Color.Blue, contxyzm*2));
+                    lock(topview)
+                        topview.SetPixel(x, z, Color.Lerp(Color.Black, Color.Blue, contxyzm * 2));
                 }
             }
         }
 
         map.dat[u,v,w] = new chunk() { data = dat, birdeye = topview, empty = empty, changed = true, genning = false, genned = true };
+        map.genning[u,v,w] = false;
     }
 }

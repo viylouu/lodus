@@ -41,6 +41,9 @@ partial class map {
                             renders++;
                         }
                     } else {
+                        if(!genning[x,0,z])
+                            worldgen.gen(x,0,z);
+
                         c.Fill(Color.Gray);
                         c.DrawRect(wp, size);
                     }
