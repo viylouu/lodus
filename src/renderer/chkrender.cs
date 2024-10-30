@@ -11,15 +11,6 @@ partial class map {
 
         Vector2 cam = new(player.pos.X,player.pos.Z);
 
-        //Vector2 min = new(0,0);
-        //Vector2 max = new();
-
-        //(chunk c, Vector3 p)[] v = dat.ToArray();
-        /*.Where(chunkInfo =>
-            chunkInfo.p.X >= min.X && chunkInfo.p.X <= max.X &&
-            chunkInfo.p.Z >= min.Y && chunkInfo.p.Z <= max.Y
-        ).ToArray()*/
-
         int renders = 0;
 
         Vector2 size = new Vector2(g.chksize, g.chksize)/player.zoom;
@@ -34,8 +25,10 @@ partial class map {
                             dat[x,0,z].genning = true;
                             worldgen.gen(x,0,z);
                         } else {
-                            if(dat[x,0,z].changed)
+                            if(dat[x,0,z].changed) {
                                 dat[x,0,z].birdeye.ApplyChanges();
+                                dat[x,0,z].changed = false;
+                            }
 
                             c.DrawTexture(dat[x,0,z].birdeye, wp, size);
                             renders++;
