@@ -1,5 +1,3 @@
-﻿using System.Numerics;
-
-partial class map {
-    public static List<(chunk c, Vector3 p)> dat = new List<(chunk c, Vector3 p)>();
+﻿partial class map {
+    public static chunk[,,] dat = new chunk[0,0,0];
 }

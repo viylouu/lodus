@@ -24,29 +24,30 @@ partial class map {
 
         Vector2 size = new Vector2(g.chksize, g.chksize)/player.zoom;
 
-        for(int i = a; i < Math.Min(a+512,dat.Count); i++) {
-            Vector2 wp = cam + new Vector2(dat[i].p.X * g.chksize, dat[i].p.Z * g.chksize)/player.zoom;
+        for(int x = 0; x < dat.GetLength(0); x++) 
+            for(int z = 0; z < dat.GetLength(2); z++) {
+                Vector2 wp = cam + new Vector2(x * g.chksize, z * g.chksize)/player.zoom;
 
-            if(wp.X > -g.chksize/player.zoom && wp.Y > -g.chksize/player.zoom && wp.X < Window.Width && wp.Y < Window.Height) {
-                if(dat[i].c != null) {
-                    if(!dat[i].c.genning && !dat[i].c.genned) {
-                        dat[i].c.genning = true;
-                        worldgen.gen(i);
+                if(wp.X > -g.chksize/player.zoom && wp.Y > -g.chksize/player.zoom && wp.X < Window.Width && wp.Y < Window.Height) {
+                    if(dat[x,0,z] != null) {
+                        if(!dat[x,0,z].genning && !dat[x,0,z].genned) {
+                            dat[x,0,z].genning = true;
+                            worldgen.gen(x,0,z);
+                        } else {
+                            if(dat[x,0,z].changed)
+                                dat[x,0,z].birdeye.ApplyChanges();
+
+                            c.DrawTexture(dat[x,0,z].birdeye, wp, size);
+                            renders++;
+                        }
                     } else {
-                        if(dat[i].c.changed)
-                            dat[i].c.birdeye.ApplyChanges();
-
-                        c.DrawTexture(dat[i].c.birdeye, wp, size);
-                        renders++;
+                        c.Fill(Color.Gray);
+                        c.DrawRect(wp, size);
                     }
-                } else {
-                    c.Fill(Color.Gray);
-                    c.DrawRect(wp, size);
-                }
-            } else
-                renders++;
-        }
+                } else
+                    renders++;
+            }
 
-        a = (a+renders)%dat.Count;
+        a = (a+renders)%(dat.GetLength(0)*dat.GetLength(2));
     }
 }

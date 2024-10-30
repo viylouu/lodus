@@ -28,11 +28,9 @@ public class worldgen {
         lerp.SetSeed(seed);
     }
 
-    public static async void gen(int i) {
+    public static async void gen(int u, int v, int w) {
         ushort[,,] dat = new ushort[g.chksize,g.chksize,g.chksize];
         ITexture topview = Graphics.CreateTexture(g.chksize,g.chksize);
-
-        int u = (int)map.dat[i].p.X, v = (int)map.dat[i].p.Y, w = (int)map.dat[i].p.Z;
 
         float contxyz = 0;
         float bxyz = 0;
@@ -76,6 +74,6 @@ public class worldgen {
             }
         }
 
-        map.dat[i] = (new chunk() { data = dat, birdeye = topview, empty = empty, changed = true, genning = false, genned = true }, new(u,v,w));
+        map.dat[u,v,w] = new chunk() { data = dat, birdeye = topview, empty = empty, changed = true, genning = false, genned = true };
     }
 }

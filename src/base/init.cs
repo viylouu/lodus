@@ -14,15 +14,15 @@ partial class lodus {
 
         Console.WriteLine("generating chunks");
 
+        map.dat = new chunk[256,256,256];
+
         int i = 0;
 
         int total = 128 * 64;
 
         for(int x = 0; x < 128; x++)
             for(int z = 0; z < 64; z++) {
-                map.dat.Add((null, new(x,0,z)));
-    
-                worldgen.gen(i);
+                worldgen.gen(x,0,z);
                 i++;
 
                 if(i%64==0)
