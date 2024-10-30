@@ -8,10 +8,8 @@ public class worldgen {
 
     static int seed = 0;
 
-    static byte maxasync = 8;
-    static byte async = 0;
-
-    static Random r = new();
+    static ushort maxasync = 1024;
+    static ushort async = 0;
 
     public static void initnoise(int _seed) {
         seed = _seed;
@@ -45,39 +43,48 @@ public class worldgen {
 
         bool empty = true;
         
-        for(int x = 0; x < g.chksize; x++) {
-            for(int y = 0; y < 1; y++) {
-                for(int z = 0; z < g.chksize; z++) {
+        for(int x = 0; x < g.chksize; x++)
+            for(int z = 0; z < g.chksize; z++) {
+                float height = 0;
+
+                for(int y = 0; y < g.chksize; y++) {
                     async++;
 
                     if(async >= maxasync) {
                         async = 0;
-                        await Task.Delay(16);
+                        await Task.Delay(1);
                     }
 
                     wx = u*g.chksize+x;
                     wy = v*g.chksize+y;
                     wz = w*g.chksize+z;
 
-                    contxyz = (cont.GetNoise(wx,wy,wz)+1)*.5f;
-                    bxyz = (b.GetNoise(wx,wy,wz)+1)*.5f;
-                    lerpxyz = (lerp.GetNoise(wx,wy,wz)+1)*.5f;
-                    contmul = float.Lerp(MathF.Pow(bxyz,6),1-MathF.Pow(1-bxyz,3),lerpxyz);
-                    contxyzm = contxyz*contmul;
+                    if(y == 0) {
+                        contxyz = (cont.GetNoise(wx,wy,wz)+1)*.5f;
+                        bxyz = (b.GetNoise(wx,wy,wz)+1)*.5f;
+                        lerpxyz = (lerp.GetNoise(wx,wy,wz)+1)*.5f;
+                        contmul = float.Lerp(MathF.Pow(bxyz,10),1-MathF.Pow(1-bxyz,3),lerpxyz);
+                        contxyzm = contxyz*contmul;
+                        height = contxyzm*g.chksize;
+                    }
 
-                    if(contxyz*bxyz >= 0.25f) {
+                    if(contxyzm >= 0.25f && y < height) {
                         dat[x,y,z] = tiles.grass.tex;
-                        lock(topview)
-                            topview.SetPixel(x,z,Color.Lerp(Color.Black,Color.White, contxyzm));
+                        try {
+                            lock(topview)
+                                topview.SetPixel(x,z,Color.Lerp(Color.Black,Color.White, (float)y/g.chksize));
+                        } catch(Exception e) { Console.WriteLine($"could not write to texture! {e.Message}"); }
                         empty = false;
                         continue;
                     }
 
-                    lock(topview)
-                        topview.SetPixel(x, z, Color.Lerp(Color.Black, Color.Blue, contxyzm * 2));
+                    if(y == 0)
+                        try {
+                            lock(topview)
+                                topview.SetPixel(x, z, Color.Blue);
+                        } catch(Exception e) { Console.WriteLine($"could not write to texture! {e.Message}"); }
                 }
             }
-        }
 
         map.dat[u,v,w] = new chunk() { data = dat, birdeye = topview, empty = empty, changed = true, genning = false, genned = true };
         map.genning[u,v,w] = false;
