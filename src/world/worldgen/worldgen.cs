@@ -72,7 +72,7 @@ public class worldgen {
                         dat[x,y,z] = tiles.grass.tex;
                         try {
                             lock(topview)
-                                topview.SetPixel(x,z,Color.Lerp(Color.Black,Color.White, (float)y/g.chksize));
+                                topview[x,z] = Color.Lerp(new Color(23,43,16),new Color(166,207,120), (float)y/g.chksize);
                         } catch(Exception e) { Console.WriteLine($"could not write to texture! {e.Message}"); }
                         empty = false;
                         continue;
@@ -81,12 +81,15 @@ public class worldgen {
                     if(y == 0)
                         try {
                             lock(topview)
-                                topview.SetPixel(x, z, Color.Blue);
+                                topview[x,z] = new Color(81,176,213);
                         } catch(Exception e) { Console.WriteLine($"could not write to texture! {e.Message}"); }
                 }
             }
 
         map.dat[u,v,w] = new chunk() { data = dat, birdeye = topview, empty = empty, changed = true, genning = false, genned = true };
         map.genning[u,v,w] = false;
+
+        if(v==0)
+            map.chunksloaded++;
     }
 }
