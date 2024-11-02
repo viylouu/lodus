@@ -24,20 +24,18 @@ partial class map {
                                 dat[x,0,z].birdeye.ApplyChanges();
                                 dat[x,0,z].changed = false;
 
-                                int wx = (int)MathF.Floor(x*g.chksize*.0009765625f), //divide by 1024
-                                    wy = (int)MathF.Floor(z*g.chksize*.0009765625f);
+                                int wx = (int)math.floor(x*g.chksize*.0009765625f), //divide by 1024
+                                    wy = (int)math.floor(z*g.chksize*.0009765625f);
 
                                 for(int u = 0; u < g.chksize; u++)
                                     for(int v = 0; v < g.chksize; v++) {
                                             Color set = dat[x,0,z].birdeye[u,v];
 
                                             worldmap[wx,wy][(u+x*g.chksize)%1024,(v+z*g.chksize)%1024] = set;
-                                        } //catch(Exception e) { Console.WriteLine($"wx: {wx}, wy: {wy}, wmx: {u+(x*g.chksize)%1024}, wmy: {v+(z*g.chksize)%1024}, x: {x}, z: {z}, u: {u}, v: {v}"); }
+                                        }
 
                                 worldmap[wx,wy].ApplyChanges();
                             }
-
-                            //c.DrawTexture(dat[x,0,z].birdeye, wp, size);
                         }
                     } else {
                         if(!genning[x,0,z])
@@ -52,6 +50,6 @@ partial class map {
 
         //chunks loaded percentage
         c.Fill(Color.White);
-        c.DrawAlignedText($"{Math.Round((float)map.chunksloaded/(float)(map.dat.GetLength(0)*map.dat.GetLength(2))*10000)/100}% explored", 48, new(Window.Width-3,3), Alignment.TopRight);
+        c.DrawAlignedText($"{math.round((float)chunksloaded/(float)(dat.GetLength(0)*dat.GetLength(2))*10000)/100}% explored", 48, new(Window.Width-3,3), Alignment.TopRight);
     }
 }

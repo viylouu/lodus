@@ -63,7 +63,7 @@ public class worldgen {
                         contxyz = (cont.GetNoise(wx,wy,wz)+1)*.5f;
                         bxyz = (b.GetNoise(wx,wy,wz)+1)*.5f;
                         lerpxyz = (lerp.GetNoise(wx,wy,wz)+1)*.5f;
-                        contmul = float.Lerp(MathF.Pow(bxyz,10),1-MathF.Pow(1-bxyz,3),lerpxyz);
+                        contmul = float.Lerp(math.pow(bxyz,10),1-math.cbe(1-bxyz),lerpxyz);
                         contxyzm = contxyz*contmul;
                         height = contxyzm*g.chksize;
                     }

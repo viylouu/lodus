@@ -16,7 +16,7 @@ partial class lodus {
 
         //perfgraph(c);
         c.Fill(Color.White);
-        c.DrawAlignedText($"{MathF.Round(1/Time.DeltaTime)} fps", 8, Vector2.One*3, Alignment.TopLeft);
+        c.DrawAlignedText($"{math.round(1/Time.DeltaTime)} fps", 8, Vector2.One*3, Alignment.TopLeft);
     }
 
     static void perfgraph(ICanvas c) { 
@@ -46,6 +46,6 @@ partial class lodus {
 
         c.DrawAlignedText("60", 8, new(fpsses.Count/2, Window.Height - 72), Alignment.CenterLeft);
         c.DrawAlignedText("30", 8, new(fpsses.Count/2, Window.Height - 42), Alignment.CenterLeft);
-        c.DrawAlignedText(Math.Round(fpsavg) + "", 8, new(fpsses.Count/2, Window.Height - fpsavg-12), Alignment.CenterLeft);
+        c.DrawAlignedText(math.round(fpsavg) + "", 8, new(fpsses.Count/2, Window.Height - fpsavg-12), Alignment.CenterLeft);
     }
 }

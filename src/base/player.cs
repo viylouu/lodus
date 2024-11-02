@@ -12,7 +12,7 @@ public class player {
                 pos += new Vector3(Mouse.DeltaPosition.X, 0, Mouse.DeltaPosition.Y);
 
             zoom -= Mouse.ScrollWheelDelta*0.125f;
-            zoom = MathF.Max(zoom,0.125f);
+            zoom = math.max(zoom,0.125f);
         } else {
             if(Keyboard.IsKeyDown(Key.W)) {
                 pos.X -= Time.DeltaTime;
