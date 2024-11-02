@@ -23,6 +23,6 @@ partial class lodus {
 
         Console.WriteLine("finished initialization!");
 
-        //Simulation.SetFixedResolution(640,360,Color.Black);
+        Simulation.SetFixedResolution(640,360,Color.Black);
     }
 }

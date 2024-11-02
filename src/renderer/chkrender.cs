@@ -1,4 +1,5 @@
-﻿using SimulationFramework;
+﻿using Silk.NET.OpenGL;
+using SimulationFramework;
 using SimulationFramework.Drawing;
 using System.Numerics;
 
@@ -6,6 +7,11 @@ partial class map {
     static ITexture atlas;
 
     static int wmsX, wmsY;
+
+    public enum rendertype { 
+        map,
+        isometric
+    }
 
     public static void init() {
         atlas = Graphics.LoadTexture(@"assets\sprites\tiles\atlas.png");
@@ -23,55 +29,54 @@ partial class map {
                 worldmap[x,y] = Graphics.CreateTexture(1024,1024);
     }
 
-    public static void rend(ICanvas c) {
-        //worldmap view
+    public static void rend(ICanvas c, rendertype r) {
+        if(r == rendertype.map) { rendermap(c); return; }
 
-        Vector2 cam = new(player.pos.X,player.pos.Z);
+        int minx = (int)Math.Clamp(Math.Floor(player.pos.X/g.chksize)-1,0,dat.GetLength(0)-1),
+            miny = (int)Math.Clamp(Math.Floor(player.pos.Y/g.chksize)-1,0,dat.GetLength(0)-1),
+            minz = (int)Math.Clamp(Math.Floor(player.pos.Z/g.chksize)-1,0,dat.GetLength(0)-1),
+            maxx = (int)Math.Clamp(Math.Floor(player.pos.X/g.chksize)+2,1,dat.GetLength(0)),
+            maxy = (int)Math.Clamp(Math.Floor(player.pos.Y/g.chksize)+2,1,dat.GetLength(0)),
+            maxz = (int)Math.Clamp(Math.Floor(player.pos.Z/g.chksize)+2,1,dat.GetLength(0));
 
-        Vector2 size = new Vector2(1024,1024)/player.zoom;
+        for(int v = miny; v < maxy; v++)
+        for(int w = minz; w < maxz; w++)
+        for(int u = minx; u < maxx; u++) {
+            if(dat[u,v,w] == null) {
+                if(genning[u, v, w])
+                    continue;
 
-        for(int x = 0; x < dat.GetLength(0); x++) 
-            for(int z = 0; z < dat.GetLength(2); z++) {
-                Vector2 wp = cam + new Vector2(x * g.chksize, z * g.chksize)/player.zoom;
-
-                if(wp.X > -g.chksize/player.zoom && wp.Y > -g.chksize/player.zoom && wp.X < Window.Width && wp.Y < Window.Height) {
-                    if(dat[x,0,z] != null) {
-                        if(!dat[x,0,z].genning && !dat[x,0,z].genned) {
-                            dat[x,0,z].genning = true;
-                            worldgen.gen(x,0,z);
-                        } else {
-                            if(dat[x,0,z].changed) {
-                                dat[x,0,z].birdeye.ApplyChanges();
-                                dat[x,0,z].changed = false;
-
-                                int wx = (int)MathF.Floor(x*g.chksize/1024f),
-                                    wy = (int)MathF.Floor(z*g.chksize/1024f);
-
-                                for(int u = 0; u < g.chksize; u++)
-                                    for(int v = 0; v < g.chksize; v++) {
-                                            Color set = dat[x,0,z].birdeye[u,v];
-
-                                            worldmap[wx,wy][(u+x*g.chksize)%1024,(v+z*g.chksize)%1024] = set;
-                                        } //catch(Exception e) { Console.WriteLine($"wx: {wx}, wy: {wy}, wmx: {u+(x*g.chksize)%1024}, wmy: {v+(z*g.chksize)%1024}, x: {x}, z: {z}, u: {u}, v: {v}"); }
-
-                                worldmap[wx,wy].ApplyChanges();
-                            }
-
-                            //c.DrawTexture(dat[x,0,z].birdeye, wp, size);
-                        }
-                    } else {
-                        if(!genning[x,0,z])
-                            worldgen.gen(x,0,z);
-                    }
-                }
+                worldgen.gen(u,v,w);
+                continue;
             }
 
-        for(int x = 0; x < wmsX; x++)
-            for(int y = 0; y < wmsY; y++)
-                c.DrawTexture(worldmap[x,y], cam + new Vector2(x*1024,y*1024)/player.zoom, size);
+            if(dat[u,v,w].genned && !dat[u,v,w].empty)
+                for(int y = 0; y < g.chksize; y++) 
+                for(int z = 0; z < g.chksize; z++)
+                for(int x = 0; x < g.chksize; x++)
+                    if(dat[u,v,w].data[x,y,z] != 65535) {
+                        if(x < g.chksize-1 && y < g.chksize-1 && z < g.chksize-1) {
+                            if(dat[u,v,w].data[x+1,y,z] < 256)
+                            if(dat[u,v,w].data[x,y+1,z] < 256)
+                            if(dat[u,v,w].data[x,y,z+1] < 256)
+                                continue;
+                        }
 
-        //chunks loaded percentage
-        c.Fill(Color.White);
-        c.DrawAlignedText($"{Math.Round((float)map.chunksloaded/(float)(map.dat.GetLength(0)*map.dat.GetLength(2))*10000)/100}% explored", 48, new(Window.Width-3,3), Alignment.TopRight);
+                        float sx = Window.Width/2+(u*g.chksize*6-w*g.chksize*6+x*6-z*6)-player.pos.X;
+                        float sy = Window.Height/2+(v*g.chksize*-6+w*g.chksize*3+u*g.chksize*3-y*6+z*3+x*3)-player.pos.Y;
+
+                        byte block = (byte)dat[u,v,w].data[x,y,z];
+
+                        c.DrawTexture(
+                            atlas, 
+                            new Rectangle(
+                                tiles.t[block].tex%16*16,
+                                MathF.Floor(tiles.t[block].tex/16)*16,
+                                16,16
+                            ), 
+                            new Rectangle(sx,sy, 16,16, Alignment.Center)
+                        );
+                    }
+        }
     }
 }
