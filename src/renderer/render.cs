@@ -1,5 +1,6 @@
 ﻿using SimulationFramework;
 using SimulationFramework.Drawing;
+using SimulationFramework.Input;
 using System.Numerics;
 
 partial class lodus {
@@ -7,16 +8,24 @@ partial class lodus {
     static float fpsavg;
     static float fpstot;
 
+    static bool inmap = false;
+
     static void rend(ICanvas c) {
         c.Clear(Color.Black);
 
-        map.rend(c, map.rendertype.isometric);
+        if(Keyboard.IsKeyPressed(Key.M)) {
+            inmap = !inmap;
+            if(inmap)
+                player.wpos = player.pos;
+            else
+                player.pos = player.wpos;
+        }
 
-        player.move(false);
+        map.rend(c,inmap);
 
-        //perfgraph(c);
-        c.Fill(Color.White);
-        c.DrawAlignedText($"{math.round(1/Time.DeltaTime)} fps", 8, Vector2.One*3, Alignment.TopLeft);
+        player.move(inmap);
+
+        fontie.rendertext(c, fontie.dfont, $"{math.round(1/Time.DeltaTime)} fps", 3,3, Color.White);
     }
 
     static void perfgraph(ICanvas c) { 

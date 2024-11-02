@@ -3,6 +3,9 @@ using System.Numerics;
 using SimulationFramework;
 
 public class fontie {
+    public static ITexture dfonttex = Graphics.LoadTexture(@"assets\fonts\font.png");
+    public static font dfont = genfont(dfonttex, " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz");
+
     public static font genfont(ITexture _tex, string _chars) {
         font font = new();
 

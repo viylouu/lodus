@@ -47,7 +47,7 @@ public class worldgen {
             for(int z = 0; z < g.chksize; z++) {
                 float height = 0;
 
-                for(int y = 0; y < g.chksize; y++) {
+                for(int y = g.chksize-1; y >= 0; y--) {
                     async++;
 
                     if(async >= maxasync) {
@@ -59,37 +59,49 @@ public class worldgen {
                     wy = v*g.chksize+y;
                     wz = w*g.chksize+z;
 
-                    if(y == 0) {
+                    if(y == g.chksize-1) {
                         contxyz = (cont.GetNoise(wx,wy,wz)+1)*.5f;
                         bxyz = (b.GetNoise(wx,wy,wz)+1)*.5f;
                         lerpxyz = (lerp.GetNoise(wx,wy,wz)+1)*.5f;
                         contmul = float.Lerp(math.pow(bxyz,10),1-math.cbe(1-bxyz),lerpxyz);
                         contxyzm = contxyz*contmul;
-                        height = contxyzm*g.chksize;
+                        height = contxyzm*g.chksize-5;
                     }
 
-                    if(contxyzm >= 0.25f && y < height) {
-                        dat[x,y,z] = tiles.grass.tex;
+                    if(contxyzm >= 0.25f && wy <= height) {
+                        if(y == g.chksize-1)
+                            dat[x,y,z] = tiles.grass.tex;
+                        else if(dat[x,y+1,z] == 65535)
+                            dat[x,y,z] = tiles.grass.tex;
+                        else
+                            dat[x,y,z] = tiles.dirt.tex;
+
                         try {
                             lock(topview)
-                                topview[x,z] = Color.Lerp(new Color(23,43,16),new Color(166,207,120), (float)y/g.chksize);
+                                topview[x,z] = Color.Lerp(new Color(23,43,16),new Color(166,207,120),y);
                         } catch(Exception e) { Console.WriteLine($"could not write to texture! {e.Message}"); }
                         empty = false;
                         continue;
                     }
 
-                    if(y == 0)
+                    if(wy == 0) {
+                        dat[x,y,z] = tiles.water.tex;
+                        empty = false;
                         try {
                             lock(topview)
                                 topview[x,z] = new Color(81,176,213);
                         } catch(Exception e) { Console.WriteLine($"could not write to texture! {e.Message}"); }
+                        continue;
+                    } else
+                        dat[x,y,z] = 65535;
                 }
             }
 
         map.dat[u,v,w] = new chunk() { data = dat, birdeye = topview, empty = empty, changed = true, genning = false, genned = true };
-        map.genning[u,v,w] = false;
 
-        if(v==0)
+        if(v == 0)
             map.chunksloaded++;
+
+        map.genning[u,v,w] = false;
     }
 }

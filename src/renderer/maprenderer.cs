@@ -17,8 +17,8 @@ partial class map {
                 if(wp.X > -g.chksize*zoom1d && wp.Y > -g.chksize*zoom1d && wp.X < Window.Width && wp.Y < Window.Height) {
                     if(dat[x,0,z] != null) {
                         if(!dat[x,0,z].genning && !dat[x,0,z].genned) {
-                            dat[x,0,z].genning = true;
-                            worldgen.gen(x,0,z);
+                            //dat[x,0,z].genning = true;
+                            //worldgen.gen(x,0,z);
                         } else {
                             if(dat[x,0,z].changed) {
                                 dat[x,0,z].birdeye.ApplyChanges();
@@ -29,18 +29,18 @@ partial class map {
 
                                 for(int u = 0; u < g.chksize; u++)
                                     for(int v = 0; v < g.chksize; v++) {
-                                            Color set = dat[x,0,z].birdeye[u,v];
+                                        Color set = dat[x,0,z].birdeye[u,v];
 
-                                            worldmap[wx,wy][(u+x*g.chksize)%1024,(v+z*g.chksize)%1024] = set;
-                                        }
+                                        worldmap[wx,wy][(u+x*g.chksize)%1024,(v+z*g.chksize)%1024] = set;
+                                    }
 
                                 worldmap[wx,wy].ApplyChanges();
                             }
                         }
-                    } else {
+                    } /*else {
                         if(!genning[x,0,z])
                             worldgen.gen(x,0,z);
-                    }
+                    }*/
                 }
             }
 
@@ -49,7 +49,7 @@ partial class map {
                 c.DrawTexture(worldmap[x,y], cam + new Vector2(x*1024,y*1024)*zoom1d, size);
 
         //chunks loaded percentage
-        c.Fill(Color.White);
-        c.DrawAlignedText($"{math.round((float)chunksloaded/(float)(dat.GetLength(0)*dat.GetLength(2))*10000)/100}% explored", 48, new(Window.Width-3,3), Alignment.TopRight);
+        string text = $"{math.round((float)chunksloaded/(float)(dat.GetLength(0)*dat.GetLength(2))*10000)/100}% explored";
+        fontie.rendertext(c, fontie.dfont, text, Window.Width-3-fontie.predicttextwidth(fontie.dfont, text), 3, Color.White);
     }
 }
