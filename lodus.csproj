@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <Folder Include="assets\audio\" />
-    <Folder Include="assets\misc\" />
     <Folder Include="assets\sprites\tiledata\" />
     <Folder Include="assets\sprites\tiles\" />
   </ItemGroup>
@@ -24,7 +23,7 @@
     <None Update="assets\fonts\font.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="assets\misc\pallate.png">
+    <None Update="assets\misc\palette.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="assets\sprites\tiledata\highlights.png">

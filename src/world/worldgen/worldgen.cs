@@ -65,7 +65,7 @@ public class worldgen {
                         lerpxyz = (lerp.GetNoise(wx,wy,wz)+1)*.5f;
                         contmul = float.Lerp(math.pow(bxyz,10),1-math.cbe(1-bxyz),lerpxyz);
                         contxyzm = contxyz*contmul;
-                        height = contxyzm*g.chksize-5;
+                        height = (contxyzm*g.chksize*(contxyz*2+1)-(.25f*g.chksize*(contxyz*2+1)));
                     }
 
                     if(contxyzm >= 0.25f && wy <= height) {

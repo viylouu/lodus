@@ -2,8 +2,11 @@
     /// <summary> stores tile data in a way to easily access it by indexing it with the map's data at i[x,y,z] </summary>
     public static tile[] t;
 
+    public static tile_s[] tarr;
+
     public static void initarr() {
         t = new tile[256];
+        tarr = new tile_s[256];
 
         t[grass.tex] = grass;
         t[dirt.tex] = dirt;
@@ -23,6 +26,13 @@
         t[shale.tex] = shale;
         t[gypsum.tex] = gypsum;
         t[rocksalt.tex] = rocksalt;
+
+        for(int i = 0; i < 256; i++) {
+            tarr[i] = new();
+            if(t[i] != null) {
+                tarr[i].tex = t[i].tex;
+            }
+        }
     }
 
     //tiles

@@ -14,7 +14,7 @@ partial class lodus {
 
         Console.WriteLine("initializing large arrays");
 
-        map.datLX = 256; map.datLY = 256; map.datLZ = 256;
+        map.datLX = 512; map.datLY = 256; map.datLZ = 512;
         map.dat = new chunk[map.datLX,map.datLY,map.datLZ];
         map.genning = new bool[map.datLX,map.datLY,map.datLZ];
 
@@ -25,5 +25,7 @@ partial class lodus {
         Console.WriteLine("finished initialization!");
 
         Simulation.SetFixedResolution(640,360,Color.Black);
+
+        player.pos = new(map.datLX/2*g.chksize,0,map.datLZ/2*g.chksize);
     }
 }

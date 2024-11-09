@@ -1,15 +1,35 @@
-﻿using SimulationFramework;
+﻿using Silk.NET.OpenGL;
+using SimulationFramework;
 using SimulationFramework.Drawing;
+using System.Numerics;
+
+public struct stile { 
+    public Vector2 p { get; set; }
+    public int b { get; set; }
+    public Vector3 wp { get; set; }
+}
 
 partial class map {
     static ITexture atlas;
+    static ITexture normals;
+    static ITexture highlights;
+    static ITexture mappings;
+
+    static ITexture palette;
 
     static int wmsX, wmsY;
 
-    static tileshader tshader = new();
+    static Vector3 sun = new(.5f,1,0);
+
+    public static tileshader tshader = new();
 
     public static void init() {
         atlas = Graphics.LoadTexture(@"assets\sprites\tiles\atlas.png");
+        normals = Graphics.LoadTexture(@"assets\sprites\tiledata\normals.png");
+        highlights = Graphics.LoadTexture(@"assets\sprites\tiledata\highlights.png");
+        mappings = Graphics.LoadTexture(@"assets\sprites\tiledata\mappings.png");
+
+        palette = Graphics.LoadTexture(@"assets\misc\palette.png");
 
         wmsX = (int)math.ceil(dat.GetLength(0)*g.chksize/1024f);
         wmsY = (int)math.ceil(dat.GetLength(2)*g.chksize/1024f);
@@ -24,6 +44,17 @@ partial class map {
                 worldmap[x,y] = Graphics.CreateTexture(1024,1024);
 
         tshader.atlas = atlas;
+        tshader.normals = normals;
+        tshader.highlights = highlights;
+        tshader.mappings = mappings;
+
+        tshader.palette = palette;
+        tshader.psx = palette.Width;
+        tshader.psy = palette.Height;
+
+        tshader.sun = sun;
+
+        //tshader.tiles = tiles.tarr;
     }
 
     public static float sxP, syP, sxU, syU, sx, sy, ya, za, zb, yb;
@@ -33,7 +64,7 @@ partial class map {
     public static int datLX, datLY, datLZ;
 
     public static void rend(ICanvas c, bool inmap) {
-        c.Fill(tshader);
+        //c.Fill(tshader);
 
         if(inmap) { rendermap(c); return; }
 
@@ -43,6 +74,8 @@ partial class map {
         maxx = (int)math.clamp(math.floor(player.pdcs.X)+4,1,datLX);
         maxy = (int)math.clamp(math.floor(player.pdcs.Y)+4,1,datLY);
         maxz = (int)math.clamp(math.floor(player.pdcs.Z)+4,1,datLZ);
+
+        List<stile> screen = new List<stile>();
 
         for(int v = miny; v < maxy; v++)
         for(int w = minz; w < maxz; w++)
@@ -88,16 +121,22 @@ partial class map {
                             //    16,16
                             //)
 
-                            tshader.drawx = sx-8;
+                            /*tshader.drawx = sx-8;
                             tshader.drawy = sy+yb-8;
                             tshader.samplex = math.floor(tiles.t[block].tex*.0625f)*16;
                             tshader.sampley = tiles.t[block].tex%16*16;
 
-                            c.DrawRect(sx,sy+yb, 16,16, Alignment.Center);
+                            c.DrawRect(sx,sy+yb, 16,16, Alignment.Center);*/
+
+                            screen.Add(new() { p = new(sx, sy), b = block, wp = new(x,y,z) });
                         }
                     }
                 }
                 }
         }
+
+        c.Fill(tshader);
+        tshader.scrn = screen.ToArray();
+        c.DrawRect(0,0,640,360);
     }
 }
