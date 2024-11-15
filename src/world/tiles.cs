@@ -38,92 +38,92 @@
     //tiles
 
     public static tile grass = new() {
-        tex = 0x00,
+        tex = 0x0000,
         name = "grass"
     };
 
     public static tile dirt = new() {
-        tex = 0x01,
+        tex = 0x0001,
         name = "dirt"
     };
 
     public static tile water = new() {
-        tex = 0x03,
+        tex = 0x0003,
         name = "water"
     };
 
     public static tile rhyolite = new() {
-        tex = 0x20,
+        tex = 0x0200,
         name = "rhyolite"
     };
 
     public static tile andesite = new() {
-        tex = 0x30,
+        tex = 0x0300,
         name = "andesite"
     };
 
     public static tile basalt = new() {
-        tex = 0x40,
+        tex = 0x0400,
         name = "basalt"
     };
 
     public static tile granite = new() {
-        tex = 0x21,
+        tex = 0x0201,
         name = "granite"
     };
 
     public static tile diorite = new() {
-        tex = 0x31,
+        tex = 0x0301,
         name = "diorite"
     };
 
     public static tile gabbro = new() {
-        tex = 0x41,
+        tex = 0x0401,
         name = "gabbro"
     };
 
     public static tile conglom = new() { 
-        tex = 0x60,
+        tex = 0x0600,
         name = "conglomerate"
     };
 
     public static tile breccia = new() { 
-        tex = 0x70,
+        tex = 0x0700,
         name = "breccia"
     };
 
     public static tile quartzar = new() { 
-        tex = 0x61,
+        tex = 0x0601,
         name = "quartz arenite"
     };
 
     public static tile arkose = new() { 
-        tex = 0x71,
+        tex = 0x0701,
         name = "arkose"
     };
 
     public static tile wacke = new() { 
-        tex = 0x81,
+        tex = 0x0801,
         name = "wacke"
     };
 
     public static tile siltstn = new() {
-        tex = 0x62,
+        tex = 0x0602,
         name = "siltstone"
     };
 
     public static tile shale = new() {
-        tex = 0x72,
+        tex = 0x0702,
         name = "shale"
     };
 
     public static tile gypsum = new() { 
-        tex = 0xA0,
+        tex = 0x0A00,
         name = "gypsum"
     };
 
     public static tile rocksalt = new() {
-        tex = 0xA1,
+        tex = 0x0A01,
         name = "rock salt"
     };
 }
