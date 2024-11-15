@@ -27,8 +27,8 @@
     public static tile_s[] tarr;
 
     public static void initarr() {
-        t = new tile[256];
-        tarr = new tile_s[256];
+        t = new tile[65536];
+        tarr = new tile_s[65536];
 
         t[grass.tex] = grass;
         t[dirt.tex] = dirt;

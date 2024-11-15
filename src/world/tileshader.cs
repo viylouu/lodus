@@ -24,7 +24,7 @@ public class tileshader : CanvasShader {
         ColorF col = new();
 
         for(int i = scrn.Length-1; i >= 0; i--)
-            if(pos.X >= scrn[i].p.X-8 && pos.Y >= scrn[i].p.Y-8 && pos.X <= scrn[i].p.X+8 && pos.Y <= scrn[i].p.Y+8) {
+            if(pos.X >= scrn[i].p.X-7 && pos.Y >= scrn[i].p.Y-8 && pos.X <= scrn[i].p.X+7 && pos.Y <= scrn[i].p.Y+8) {
                 //math.floor(tiles.t[block].tex*.0625f)*16,
                 //tiles.t[block].tex%16*16,
 
