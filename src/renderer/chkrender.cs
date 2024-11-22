@@ -1,6 +1,7 @@
 ﻿using Silk.NET.OpenGL;
 using SimulationFramework;
 using SimulationFramework.Drawing;
+using SimulationFramework.Drawing.Shaders;
 using System.Numerics;
 
 public struct stile { 
@@ -63,6 +64,10 @@ partial class map {
 
     public static int datLX, datLY, datLZ;
 
+    static int maxTiles = 9*9*9*g.chksize*g.chksize*g.chksize;
+
+    static List<stile> screen = new List<stile>();
+
     public static void rend(ICanvas c, bool inmap) {
         //c.Fill(tshader);
 
@@ -75,11 +80,15 @@ partial class map {
         maxy = (int)math.clamp(math.floor(player.pdcs.Y)+4,1,datLY);
         maxz = (int)math.clamp(math.floor(player.pdcs.Z)+4,1,datLZ);
 
-        List<stile> screen = new List<stile>();
+        screen.Clear();
 
-        for(int v = miny; v < maxy; v++)
-        for(int w = minz; w < maxz; w++)
-        for(int u = minx; u < maxx; u++) {
+        screen.Capacity = maxTiles;
+
+        for(int v = miny; v < maxy; v++) {
+        for(int w = minz; w < maxz; w++) {
+            if(v*g.chksize*12+w*g.chksize*12+player.pos.Y>0)
+        for(int u = minx; u < maxx; u++) 
+        if(u*g.chksize*12+player.pos.X>0) {
             if(dat[u,v,w] == null) {
                 if(genning[u,v,w])
                     continue;
@@ -98,44 +107,26 @@ partial class map {
                     za = z*3; zb = z*-6;
                 for(int x = 0; x < g.chksize; x++)
                     if(dat[u,v,w].data[x,y,z] != 65535) {
-                        if(x < g.chksize-1 && y < g.chksize-1 && z < g.chksize-1) {
-                            if(dat[u,v,w].data[x+1,y,z] < 256)
-                            if(dat[u,v,w].data[x,y+1,z] < 256)
-                            if(dat[u,v,w].data[x,y,z+1] < 256)
-                                continue;
-                        }
+                        if(x < g.chksize - 1 && y < g.chksize - 1 && z < g.chksize - 1 &&
+                            dat[u,v,w].data[x+1,y,z] < 1024 && dat[u,v,w].data[x+1,y,z]%1024!=tiles.water.tex &&
+                            dat[u,v,w].data[x,y+1,z] < 1024 && dat[u,v,w].data[x,y+1,z]%1024!=tiles.water.tex &&
+                            dat[u,v,w].data[x,y,z+1] < 1024 && dat[u,v,w].data[x,y,z+1]%1024!=tiles.water.tex)
+                            continue;
 
                         sx = 320+(sxU+x*6+zb)+sxP;
                         sy = 180+(syU+ya+za+x*3)+syP;
-                        if(sx > -16 && sy > -16 && sx < 656 && sy < 656) {
-                            byte block = (byte)dat[u,v,w].data[x,y,z];
 
-                            if(block == tiles.water.tex)
-                                yb = math.sin(u*g.chksize+x+Time.TotalTime*.75f)*1.5f+math.cos(w*g.chksize+z+Time.TotalTime)*1.5f;
-                            else
-                                yb = 0;
-                            
-                            //new Rectangle(
-                            //    math.floor(tiles.t[block].tex*.0625f)*16,
-                            //    tiles.t[block].tex%16*16,
-                            //    16,16
-                            //)
-
-                            /*tshader.drawx = sx-8;
-                            tshader.drawy = sy+yb-8;
-                            tshader.samplex = math.floor(tiles.t[block].tex*.0625f)*16;
-                            tshader.sampley = tiles.t[block].tex%16*16;
-
-                            c.DrawRect(sx,sy+yb, 16,16, Alignment.Center);*/
-
-                            screen.Add(new() { p = new(sx, sy), b = block, wp = new(x,y,z) });
-                        }
+                        if(sx > -16 && sy > -16 && sx < 656 && sy < 656)
+                            screen.Add(new() { p = new(sx, math.floor(sy)), b = dat[u,v,w].data[x,y,z], wp = new(x+u*g.chksize,y+v*g.chksize,z+w*g.chksize) });
                     }
                 }
                 }
         }
+        }
+        }
 
         c.Fill(tshader);
+        tshader.t = Time.TotalTime;
         tshader.scrn = screen.ToArray();
         c.DrawRect(0,0,640,360);
     }

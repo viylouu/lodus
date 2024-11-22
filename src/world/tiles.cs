@@ -53,8 +53,11 @@
             tarr[i] = new();
             if(t[i] != null) {
                 tarr[i].tex = t[i].tex;
+                tarr[i].liquid = t[i].liquid?1:0;
             }
         }
+
+        map.tshader.tiles = tarr;
     }
 
     //tiles
@@ -71,7 +74,8 @@
 
     public static tile water = new() {
         tex = 0x0003,
-        name = "water"
+        name = "water",
+        liquid = true
     };
 
     public static tile rhyolite = new() {
