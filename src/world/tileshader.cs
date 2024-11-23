@@ -5,6 +5,37 @@ using static SimulationFramework.Drawing.Shaders.ShaderIntrinsics;
 using SimulationFramework.Drawing;
 
 public class tileshader : CanvasShader {
+    public int[] dithermatrix = {
+        15,07,11,09,
+        07,05,03,07,
+        11,00,13,09,
+        09,07,09,05
+    };
+
+    /*public int[] dithermatrix = {
+        15,15,7,7,11,11,9,9,
+        7,7,5,5,3,3,7,7,
+        11,11,0,0,13,13,9,9,
+        9,9,7,7,9,9,5,5
+    };*/
+
+    public int maxmatval = 4 * 4 - 1;
+
+    /*public void applydither(ITexture tex, int width, int height) {
+        maxmatval = height * height - 1;
+
+        dithermatrix = new int[height, height];
+
+        int tiles = width / height;
+
+        for(int t = 0; t < tiles; t++) {
+            for(int x = 0; x < height; x++)
+                for(int y = 0; y < height; y++)
+                    if(tex.Sample(new(t * height + x, y)).R != 0)
+                        dithermatrix[x,y] += 1;
+        }
+    }*/
+
     public ITexture atlas;
     public ITexture normals;
     public ITexture highlights;
@@ -17,10 +48,20 @@ public class tileshader : CanvasShader {
 
     public Vector3 sun;
 
+    public Vector2 cam;
+
     public tile_s[] tiles;
     public stile[] scrn;
 
     public float t;
+
+    public bool lit(Vector2 pos, float val) {
+        pos += cam;
+
+        int intensity = (int)(val * maxmatval);
+
+        return intensity < dithermatrix[(int)pos.X % 4 + (int)pos.Y % 4 * 4];
+    }
 
     public override ColorF GetPixelColor(Vector2 pos) {
         ColorF col = new();
@@ -82,24 +123,39 @@ public class tileshader : CanvasShader {
                     px--;
 
                 if(normals.Sample(new(sx,sy-off)).R != 0) {
-                    if(sun.X == .5f)
-                        px++;
-                    if(sun.X == 0)
-                        px+=2;
+                    if(sun.X <= 1 && sun.X >= .5f)
+                        if(lit(pos, (sun.X-.5f)*2))
+                            px++;
+                    if(sun.X <= .5f) {
+                        if(!lit(pos, sun.X * 2))
+                            px++;
+                        else
+                            px+=2;
+                    }
                 }
 
                 if(normals.Sample(new(sx,sy-off)).G != 0) {
-                    if(sun.Y == .5f)
-                        px++;
-                    if(sun.Y == 0)
-                        px+=2;
+                    if(sun.Y <= 1 && sun.Y >= .5f)
+                        if(lit(pos, (sun.Y-.5f)*2))
+                            px++;
+                    if(sun.Y <= .5f) {
+                        if(!lit(pos, sun.Y*2))
+                            px++;
+                        else
+                            px+=2;
+                    }
                 }
-
+                 
                 if(normals.Sample(new(sx,sy-off)).B != 0) {
-                    if(sun.Z == .5f)
-                        px++;
-                    if(sun.Z == 0)
-                        px+=2;
+                    if(sun.Z <= 1 && sun.Z >= .5f)
+                        if(lit(pos, (sun.Z-.5f)*2))
+                            px++;
+                    if(sun.Z <= .5f) {
+                        if(!lit(pos, sun.Z*2))
+                            px++;
+                        else
+                            px+=2;
+                    }
                 }
 
                 if(px < 1)

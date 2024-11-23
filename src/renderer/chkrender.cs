@@ -24,6 +24,8 @@ partial class map {
 
     public static tileshader tshader = new();
 
+    //static ITexture dither;
+
     public static void init() {
         atlas = Graphics.LoadTexture(@"assets\sprites\tiles\atlas.png");
         normals = Graphics.LoadTexture(@"assets\sprites\tiledata\normals.png");
@@ -31,6 +33,7 @@ partial class map {
         mappings = Graphics.LoadTexture(@"assets\sprites\tiledata\mappings.png");
 
         palette = Graphics.LoadTexture(@"assets\misc\palette.png");
+        //dither = Graphics.LoadTexture(@"assets\misc\dither.png");
 
         wmsX = (int)math.ceil(dat.GetLength(0)*g.chksize/1024f);
         wmsY = (int)math.ceil(dat.GetLength(2)*g.chksize/1024f);
@@ -55,7 +58,7 @@ partial class map {
 
         tshader.sun = sun;
 
-        //tshader.tiles = tiles.tarr;
+        //tshader.applydither(dither, dither.Width, dither.Height);
     }
 
     public static float sxP, syP, sxU, syU, sx, sy, ya, za, zb, yb;
@@ -126,8 +129,10 @@ partial class map {
         }
 
         c.Fill(tshader);
+        tshader.sun = new(.125f, .25f, .35f);
         tshader.t = Time.TotalTime;
         tshader.scrn = screen.ToArray();
+        tshader.cam = new Vector2(math.floor(sxP),math.floor(syP));
         c.DrawRect(0,0,640,360);
     }
 }

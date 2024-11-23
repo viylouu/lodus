@@ -1,7 +1,6 @@
 ﻿using SimulationFramework;
 using SimulationFramework.Drawing;
 using SimulationFramework.Input;
-using System.Numerics;
 
 partial class lodus {
     static List<float> fpsses = new List<float>();
@@ -9,6 +8,8 @@ partial class lodus {
     static float fpstot;
 
     static bool inmap = false;
+
+    static bool debug = false;
 
     static void rend(ICanvas c) {
         c.Clear(Color.Black);
@@ -25,14 +26,18 @@ partial class lodus {
 
         player.move(inmap);
 
-        fontie.rendertext(c, fontie.dfont, $"{math.round(1/Time.DeltaTime)} fps", 3,3, Color.White);
+        if(debug)
+            debugmenu(c);
+
+        if(Keyboard.IsKeyPressed(Key.F2))
+            debug = !debug;
     }
 
     static void perfgraph(ICanvas c) { 
         float fps = 1 / Time.DeltaTime;
         fpsses.Add(fps);
 
-        if(fpsses.Count > 256)
+        if(fpsses.Count > 128)
             fpsses.RemoveAt(0);
 
         c.Fill(Color.White);
@@ -48,7 +53,7 @@ partial class lodus {
 
         c.Fill(Color.LightGray);
 
-        c.DrawRect(fpsses.Count+1, Window.Height, 1, 60, Alignment.BottomLeft);
+        c.DrawRect(fpsses.Count, Window.Height, 1, 60, Alignment.BottomLeft);
         c.DrawRect(0, Window.Height - 60, fpsses.Count, 1);
         c.DrawRect(0, Window.Height - 30, fpsses.Count, 1);
         c.DrawRect(0, Window.Height - fpsavg-1, fpsses.Count, 3);
