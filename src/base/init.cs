@@ -22,10 +22,14 @@ partial class lodus {
 
         map.init();
 
+        Console.WriteLine("misc initialization");
+
+        Simulation.SetFixedResolution(640, 360, Color.Black);
+
+        player.pos = new(map.datLX / 2 * g.chksize, 0, map.datLZ / 2 * g.chksize);
+
+        initdebugmenu();
+
         Console.WriteLine("finished initialization!");
-
-        Simulation.SetFixedResolution(640,360,Color.Black);
-
-        player.pos = new(map.datLX/2*g.chksize,0,map.datLZ/2*g.chksize);
     }
 }

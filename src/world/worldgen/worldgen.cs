@@ -6,7 +6,7 @@ public class worldgen {
     static fnl b = new(); //big noise
     static fnl lerp = new(); //lerp between inquad big and outquad big
 
-    static int seed = 0;
+    public static int seed = 0;
 
     static ushort maxasync = 1024;
     static ushort async = 0;
