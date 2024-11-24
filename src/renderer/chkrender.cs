@@ -56,9 +56,55 @@ partial class map {
         tshader.psx = palette.Width;
         tshader.psy = palette.Height;
 
-        tshader.sun = sun;
+        //make patlas
+
+        Vector2[] patlas = new Vector2[atlas.Width*atlas.Height];
+
+        int px = 0, py = 0;
+
+        for(int i = 0; i < atlas.Width; i++)
+            for(int j = 0; j < atlas.Height; j++) {
+                (px,py) = getp(i, j);
+
+                patlas[i+j*atlas.Width] = new(px,py);
+            }
+
+        tshader.patlas = patlas;
+        tshader.pasx = atlas.Width;
+
+        tshader.dither = g.dthrlight?1:0;
 
         //tshader.applydither(dither, dither.Width, dither.Height);
+    }
+
+    static (int, int) getp(int i, int j) {
+        int px = -1, py = 0;
+
+        Color s = atlas[i, j];
+
+        for(int y = 0; y < palette.Height; y++) {
+            for(int x = 0; x < palette.Width; x++) {
+                Color samp = palette[x, y];
+
+                if(samp.A == 0)
+                    break;
+
+                if(samp != s)
+                    continue;
+
+                px = x;
+                py = y;
+
+                break;
+            }
+
+            if(px != -1)
+                break;
+        }
+
+        if(px == -1) { px = 0; py = palette.Height - 1; }
+
+        return (px, py);
     }
 
     public static float sxP, syP, sxU, syU, sx, sy, ya, za, zb, yb;
@@ -74,6 +120,8 @@ partial class map {
     public static void rend(ICanvas c, bool inmap) {
         //c.Fill(tshader);
 
+        fontie.c = c;
+        
         if(inmap) { rendermap(c); return; }
 
         minx = (int)math.clamp(math.floor(player.pdcs.X)-3,0,datLX-1);
@@ -89,9 +137,11 @@ partial class map {
 
         for(int v = miny; v < maxy; v++) {
         for(int w = minz; w < maxz; w++) {
-            if(v*g.chksize*12+w*g.chksize*12+player.pos.Y>0)
-        for(int u = minx; u < maxx; u++) 
-        if(u*g.chksize*12+player.pos.X>0) {
+        for(int u = minx; u < maxx; u++)
+        if(u*g.chksize*6-w*g.chksize*6+sxP+320<640+g.chksize*6)
+        if(u*g.chksize*6-w*g.chksize*6+sxP+320>g.chksize*-6)
+        if(v*g.chksize*-6+w*g.chksize*3+u*g.chksize*3+syP+180<360+g.chksize*6)
+        if(v*g.chksize*-6+w*g.chksize*3+u*g.chksize*3+syP+180>g.chksize*-6) {
             if(dat[u,v,w] == null) {
                 if(genning[u,v,w])
                     continue;
@@ -120,7 +170,7 @@ partial class map {
                         sy = 180+(syU+ya+za+x*3)+syP;
 
                         if(sx > -16 && sy > -16 && sx < 656 && sy < 656)
-                            screen.Add(new() { p = new(sx, math.floor(sy)), b = dat[u,v,w].data[x,y,z], wp = new(x+u*g.chksize,y+v*g.chksize,z+w*g.chksize) });
+                            screen.Add(new() { p = new(math.floor(sx), math.floor(sy)), b = dat[u,v,w].data[x,y,z], wp = new(x+u*g.chksize,y+v*g.chksize,z+w*g.chksize) });
                     }
                 }
                 }
@@ -129,7 +179,7 @@ partial class map {
         }
 
         c.Fill(tshader);
-        tshader.sun = new(.125f, .25f, .35f);
+        tshader.sun = sun;
         tshader.t = Time.TotalTime;
         tshader.scrn = screen.ToArray();
         tshader.cam = new Vector2(math.floor(sxP),math.floor(syP));

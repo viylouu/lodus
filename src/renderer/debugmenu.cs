@@ -11,16 +11,17 @@ partial class lodus {
 
     static bool windows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
+    static string ver = "v0.0.1";
+
+    static string cpu = hwi("Win32_Processor", "Name");
+    static int cpuw = fontie.predicttextwidth(fontie.dfont, cpu);
+
+    static string gpu = hwi("Win32_VideoController", "Name");
+    static int gpuw = fontie.predicttextwidth(fontie.dfont, gpu);
+
     static void debugmenu(ICanvas c) {
         string fps = $"{math.round(1 / Time.DeltaTime)} fps";
         string ram = $"{math.round(proc.WorkingSet64*tomeg*100)/100f} MB used";
-        string ver = $"v0.0.1";
-
-        string cpu = hwi("Win32_Processor", "Name");
-        int cpuw = fontie.predicttextwidth(fontie.dfont, cpu);
-
-        string gpu = hwi("Win32_VideoController", "Name");
-        int gpuw = fontie.predicttextwidth(fontie.dfont, gpu);
 
         c.Fill(new ColorF(0,0,0,.25f));
 
@@ -34,13 +35,13 @@ partial class lodus {
         c.DrawRect(639,fontie.dfont.charh+2,gpuw+2,fontie.dfont.charh+1,Alignment.TopRight);
 
         //left side
-        fontie.rendertext(c, fontie.dfont, fps, 2, 2, Color.White);
-        fontie.rendertext(c, fontie.dfont, ram, 2, fontie.dfont.charh+3, Color.White);
-        fontie.rendertext(c, fontie.dfont, ver, 2, fontie.dfont.charh*2+4, Color.White);
+        fontie.rendertext(fontie.dfont, fps, 2, 2, Color.White);
+        fontie.rendertext(fontie.dfont, ram, 2, fontie.dfont.charh+3, Color.White);
+        fontie.rendertext(fontie.dfont, ver, 2, fontie.dfont.charh*2+4, Color.White);
 
         //right side
-        fontie.rendertext(c, fontie.dfont, cpu, 638-cpuw, 2, Color.White);
-        fontie.rendertext(c, fontie.dfont, gpu, 638-gpuw, fontie.dfont.charh + 3, Color.White);
+        fontie.rendertext(fontie.dfont, cpu, 638-cpuw, 2, Color.White);
+        fontie.rendertext(fontie.dfont, gpu, 638-gpuw, fontie.dfont.charh + 3, Color.White);
     }
     
     static string hwi(string wmiClass, string prop) {

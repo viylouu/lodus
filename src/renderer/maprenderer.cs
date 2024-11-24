@@ -50,6 +50,6 @@ partial class map {
 
         //chunks loaded percentage
         string text = $"{math.round((float)chunksloaded/(float)(dat.GetLength(0)*dat.GetLength(2))*10000)/100}% explored";
-        fontie.rendertext(c, fontie.dfont, text, Window.Width-3-fontie.predicttextwidth(fontie.dfont, text), 3, Color.White);
+        fontie.rendertext(fontie.dfont, text, Window.Width-3-fontie.predicttextwidth(fontie.dfont, text), 3, Color.White);
     }
 }

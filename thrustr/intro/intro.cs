@@ -39,7 +39,7 @@ public class intro {
         switch(introstate) {
             case 0:
                 fontie.rendertext(
-                    c, dfont,
+                    dfont,
                     "a game by viylouu", 
                     Window.Width/2 - fontie.predicttextwidth(dfont, "a game by viylouu") /2, 
                     Window.Height/2 - dfont.charh/2, 
@@ -58,14 +58,14 @@ public class intro {
                     ColorF.Lerp(ColorF.Black,ColorF.White,lerp)
                 );
                 fontie.rendertext(
-                    c, dfont,
+                    dfont,
                     "made with thrustr engine", 
                     Window.Width/2 - fontie.predicttextwidth(dfont, "made with thrustr engine") /2,
                     Window.Height/2 + 49/2f + dfont.charh/2, 
                     ColorF.Lerp(ColorF.Black,ColorF.White,lerp)
                 );
                 fontie.rendertext(
-                    c, dfont,
+                    dfont,
                     "v 0.1",
                     Window.Width/2 - fontie.predicttextwidth(dfont, "v 0.1")/2,
                     math.round(Window.Height/2 + 49/2f) + dfont.charh+4,
@@ -84,7 +84,7 @@ public class intro {
                    ColorF.Lerp(ColorF.Black, ColorF.White, lerp)
                 );
                 fontie.rendertext(
-                    c, dfont,
+                    dfont,
                     "powered by simulation framework", 
                     Window.Width/2 - fontie.predicttextwidth(dfont, "powered by simulation framework") /2,
                     Window.Height/2 + 24 + dfont.charh/2, 
