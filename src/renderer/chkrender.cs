@@ -62,8 +62,8 @@ partial class map {
 
         int px = 0, py = 0;
 
-        for(int i = 0; i < atlas.Width; i++)
-            for(int j = 0; j < atlas.Height; j++) {
+        for(int j = 0; j < atlas.Height; j++)
+            for(int i = 0; i < atlas.Width; i++) {
                 (px,py) = getp(i, j);
 
                 patlas[i+j*atlas.Width] = new(px,py);

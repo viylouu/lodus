@@ -11,26 +11,43 @@ partial class lodus {
 
     static bool debug = false;
 
+    static bool ingame = false;
+
     static void rend(ICanvas c) {
         c.Clear(Color.Black);
 
-        if(Keyboard.IsKeyPressed(Key.M)) {
-            inmap = !inmap;
-            if(inmap)
-                player.wpos = player.pos;
-            else
-                player.pos = player.wpos;
-        }
+        fontie.c = c;
 
-        map.rend(c,inmap);
+        if(ingame)
+            ingameupdate(c);
 
-        player.move(inmap);
+        if(!ingame)
+            menu.mainmenu(c);
 
+        debugupdate(c);
+    }
+
+    static void debugupdate(ICanvas c) {
         if(debug)
             debugmenu(c);
 
         if(Keyboard.IsKeyPressed(Key.F2))
             debug = !debug;
+    }
+
+    static void ingameupdate(ICanvas c) {
+        if(Keyboard.IsKeyPressed(Key.M)) {
+            inmap = !inmap;
+            if(inmap) {
+                player.wpos = player.pos;
+                player.pos *= -1;
+            } else
+                player.pos = player.wpos;
+        }
+
+        map.rend(c, inmap);
+
+        player.move(inmap);
     }
 
     static void perfgraph(ICanvas c) { 

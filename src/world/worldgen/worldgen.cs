@@ -11,6 +11,8 @@ public class worldgen {
     static ushort maxasync = 1024;
     static ushort async = 0;
 
+    static uint wlevel = 128;      //water level
+
     public static void initnoise(int _seed) {
         seed = _seed;
 
