@@ -102,12 +102,14 @@ public class tileshader : CanvasShader {
                 if(s.A == 0)
                     continue;
 
-                Vector2 p = patlas[ax+ay*pasx];
+                //wrong
+                /*Vector2 p = patlas[ax+ay*pasx];
 
                 int px = (int)p.X;
-                int py = (int)p.Y;
+                int py = (int)p.Y;*/
 
-                /*int px = -1;
+                //im just gonna use this because its correct, and there are no visible perf difference
+                int px = -1;
                 int py = 0;
 
                 for(int y = 0; y < psy; y++) {
@@ -128,7 +130,8 @@ public class tileshader : CanvasShader {
 
                     if(px != -1)
                         break;
-                }*/
+                }
+                //
 
                 if(px == -1) { px = 1; py = psy-1; }
         

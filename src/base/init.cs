@@ -14,7 +14,7 @@ partial class lodus {
 
         Console.WriteLine("initializing large arrays");
 
-        map.datLX = 256; map.datLY = 256; map.datLZ = 256;
+        map.datLX = 1024; map.datLY = 1024; map.datLZ = 1024;
         map.dat = new chunk[map.datLX,map.datLY,map.datLZ];
         map.genning = new bool[map.datLX,map.datLY,map.datLZ];
 

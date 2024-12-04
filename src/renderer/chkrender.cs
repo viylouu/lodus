@@ -124,19 +124,19 @@ partial class map {
         
         if(inmap) { rendermap(c); return; }
 
-        minx = (int)math.clamp(math.floor(player.pdcs.X)-3,0,datLX-1);
-        miny = (int)math.clamp(math.floor(player.pdcs.Y)-3,0,datLY-1);
-        minz = (int)math.clamp(math.floor(player.pdcs.Z)-3,0,datLZ-1);
-        maxx = (int)math.clamp(math.floor(player.pdcs.X)+4,1,datLX);
-        maxy = (int)math.clamp(math.floor(player.pdcs.Y)+4,1,datLY);
-        maxz = (int)math.clamp(math.floor(player.pdcs.Z)+4,1,datLZ);
+        minx = (int)math.clamp(math.floor(player.pdcs.X)-8,0,datLX-1);
+        miny = (int)math.clamp(math.floor(player.pdcs.Y)-8,0,datLY-1);
+        minz = (int)math.clamp(math.floor(player.pdcs.Z)-8,0,datLZ-1);
+        maxx = (int)math.clamp(math.floor(player.pdcs.X)+9,1,datLX);
+        maxy = (int)math.clamp(math.floor(player.pdcs.Y)+9,1,datLY);
+        maxz = (int)math.clamp(math.floor(player.pdcs.Z)+9,1,datLZ);
 
         screen.Clear();
 
         screen.Capacity = maxTiles;
 
-        for(int v = miny; v < maxy; v++) {
-        for(int w = minz; w < maxz; w++) {
+        for(int v = miny; v < maxy; v++)
+        for(int w = minz; w < maxz; w++)
         for(int u = minx; u < maxx; u++)
         if(u*g.chksize*6-w*g.chksize*6+sxP+320<640+g.chksize*6)
         if(u*g.chksize*6-w*g.chksize*6+sxP+320>g.chksize*-6)
@@ -174,8 +174,6 @@ partial class map {
                     }
                 }
                 }
-        }
-        }
         }
 
         c.Fill(tshader);

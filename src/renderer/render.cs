@@ -11,7 +11,7 @@ partial class lodus {
 
     static bool debug = false;
 
-    static bool ingame = false;
+    static bool ingame = true;
 
     static void rend(ICanvas c) {
         c.Clear(Color.Black);

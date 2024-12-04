@@ -1,5 +1,5 @@
 ﻿public class g {
-    public const byte chksize = 24; //chunk size
+    public const byte chksize = 8; //chunk size
 
     // -- settings --
 
